@@ -1,0 +1,20 @@
+.navbar {
+    display: flex;
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+
+}
+
+.navbar li {
+    flex: 1;
+    text-align: center;
+    align-content: center;
+    background-color: beige;
+    height: 100%;
+    outline-color: black;
+    outline-width: 3px;
+    outline-style: solid;
+}
