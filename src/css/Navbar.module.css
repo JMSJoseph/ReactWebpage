@@ -3,18 +3,18 @@
     list-style: none;
     width: 100%;
     padding: 0;
-    margin: 0;
+    margin-top: 0px;
     height: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-bottom: 3px solid #5573aa;
+    background-color: #7d9cd6;
 
 }
 
 .navbar li {
-    flex: 1;
     text-align: center;
+    padding-left: 2%;
     align-content: center;
-    background-color: beige;
     height: 100%;
-    outline-color: black;
-    outline-width: 3px;
-    outline-style: solid;
 }
