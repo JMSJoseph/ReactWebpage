@@ -1,0 +1,35 @@
+.titlebar {
+    display: flex;
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    margin-top: 0px;
+    height: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    background-color: rgba(85, 115, 170, 0.25)
+}
+
+.titlebar li {
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    width: 10%;
+}
+
+.titlebar li textarea {
+    resize: none;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    font: inherit;
+    outline: none;
+}
+
+.titlebar li textarea:focus {
+    border: none;
+    outline: none;
+}

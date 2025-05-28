@@ -10,10 +10,16 @@
 .posts h1 {
     font-size: 25px;
     padding-left: 3%;
-    
 }
-.posts p {
+
+.attachment{
     font-size: 18px;
-    padding-left: 4%;
     padding-bottom: 4%;
+    max-width: 100%;
+    height: auto;
+}
+
+.ghostpostsh {
+    font-size: 50px !important;
+    text-align: center !important;
 }
