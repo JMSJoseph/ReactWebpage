@@ -19,3 +19,13 @@ The second goal is to get more experience with Flask and my first experience wit
 - Flask
 - PostgreSQL
 - Vite
+
+## Pics
+
+### Board Layout
+
+![trello1](https://github.com/user-attachments/assets/72c79682-8538-4229-ac60-83a8a81367a9)
+
+### Modal
+
+![modal](https://github.com/user-attachments/assets/0daf30c8-3864-4dff-93bf-17d75ad6e0c3)
