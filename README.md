@@ -5,17 +5,17 @@ The second goal is to get more experience with Flask and my first experience wit
 
 ## Current Features/Plans
 
-Develop a decent-looking front-end CSS (Mostly Done)
-Modal for Posts (Mostly Done)
-Add Posts and Columns (Done)
-Edit Posts and Columns (Posts done, Columns need saved)
-Implement Backend using Flask and PostgresSQL (Current major task)
-Dark mode (minor task)
-Movable Posts (Should've done DND from start from a library, going to implement keyboard keys as a compromise)
+- Develop a decent-looking front-end CSS (Mostly Done)
+- Modal for Posts (Mostly Done)
+- Add Posts and Columns (Done)
+- Edit Posts and Columns (Posts done, Columns need saved)
+- Implement Backend using Flask and PostgresSQL (Current major task)
+- Dark mode (minor task)
+- Movable Posts (Should've done DND from start from a library, going to implement keyboard keys as a compromise)
 
 ## Tech Stack
--React
--TypeScript
--Flask
--PostgreSQL
--Vite
+- React
+- TypeScript
+- Flask
+- PostgreSQL
+- Vite
