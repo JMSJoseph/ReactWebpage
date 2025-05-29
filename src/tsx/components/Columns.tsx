@@ -1,16 +1,12 @@
+import { useEffect, useRef, useState} from 'react';
 import styles from '../../css/Columns.module.css'
 import Posts from './Posts';
 
-interface PostData {
-    title: string;
-    attachment: string;
-    isGhost: boolean;
-}
 
 interface ColumnElementProps {
     title: string;
     posts: PostData[];
-    onPostClickManager: (colNumber: number, state: boolean) => void;
+    onPostClickManager: (colNumber: number, postNumber: number, state: boolean) => void;
     colNumber: number;
     isGhost: boolean;
     onColumnClick: () => void;
@@ -18,14 +14,29 @@ interface ColumnElementProps {
 
 
 function Columns( {title, posts, onPostClickManager, colNumber, isGhost, onColumnClick} : ColumnElementProps) {
+    const titleRef= useRef<HTMLTextAreaElement>(null);
+    const [titleStore, setTitleStore] = useState<string>(title)
+
+    useEffect(() => {
+        setTitleStore(title);
+    }, [title]);
+
+    function handleTitleUpdate(newValue: string) {
+        setTitleStore(newValue)
+        if (titleRef.current) {
+            titleRef.current.style.height = "auto";
+            titleRef.current.style.height = `${titleRef.current.scrollHeight}px`;
+        }
+
+    }
     if(isGhost == false){
         return (
             <div className={styles.columnsDiv}>
                 <li className={styles.columnsLi} onClick = {onColumnClick}>
-                    <h1 className={styles.columnsHeader}>{title}</h1>
+                    <textarea className={styles.columnsHeader} value={titleStore} onChange={e => handleTitleUpdate(e.target.value)} ref={titleRef}></textarea>
                     <ul>
                         {posts.map((post, index) => (
-                            <Posts key = {index} title={post.title} attachment={post.attachment} isGhost={post.isGhost} onPostClick={() => onPostClickManager(colNumber, post.isGhost)}></Posts>
+                            <Posts key = {index} title={post.title} attachment={post.attachment} isGhost={post.isGhost} onPostClick={() => onPostClickManager(colNumber, index, post.isGhost)} postNumber={index}></Posts>
                         ))}
                     </ul>
                 </li>

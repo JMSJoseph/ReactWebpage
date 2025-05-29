@@ -1,23 +1,13 @@
 import { useState } from 'react'
 import styles from '../../css/Columns.module.css'
+import boardstyles from '../../css/Board.module.css'
 import Columns from './Columns';
-
-interface PostData {
-    title: string;
-    attachment: string;
-    isGhost: boolean;
-}
-
-interface ColumnData {
-    title: string;
-    posts: PostData[];
-    isGhost: boolean;
-}
+import PostModal from './PostModal'
 
 
-const GhostPost: PostData = { title: '+', attachment: '', isGhost: true }
+const GhostPost: PostData = { title: '+', attachment: '', description: "", isGhost: true }
 
-const TestPost: PostData = { title: "test", attachment:'https://wildcatterritory.com/images/stories/virtuemart/product/test.jpg', isGhost: false}
+const TestPost: PostData = { title: "Untitled Post", attachment:'', description: "", isGhost: false}
 
 const defaultPosts: PostData[] = [
     structuredClone(GhostPost)
@@ -30,7 +20,7 @@ const GhostColumn: ColumnData = {
 }
 
 const TestColumn: ColumnData = {
-    title: "Unnamed Column",
+    title: "Untitled Column",
     posts: [structuredClone(GhostPost)],
     isGhost: false
 }
@@ -45,13 +35,20 @@ const defaultColumnArray: ColumnData[] = [
 
 function Board() {
     const [colArray, setColArray] = useState<ColumnData[]>(structuredClone(defaultColumnArray))
+    const [activePostModal, setActivePostModal] = useState<{columnIndex: number; postIndex: number;} | null>(null);
 
-    function handlePostClick(columnNumber: number, state: boolean) {
+
+    function handlePostClick(columnNumber: number, postNumber: number, state: boolean) {
         if(state) {
             let copyColArray: ColumnData[] = structuredClone(colArray)
             let changingCol: ColumnData = copyColArray[columnNumber]
-            changingCol.posts = [structuredClone(TestPost), ...changingCol.posts]
+            changingCol.posts.splice(changingCol.posts.length-1, 1) 
+            changingCol.posts = [... changingCol.posts, structuredClone(TestPost), structuredClone(GhostPost)]
             setColArray(copyColArray)
+        }
+        else {
+            setActivePostModal({columnIndex: columnNumber, postIndex: postNumber})
+            console.log(columnNumber, postNumber)
         }
     }
 
@@ -64,15 +61,29 @@ function Board() {
         }
     }
 
+    function handlePostModalSave(newData: PostData, colNumber: number, postNumber: number) {
+        let newColArray: ColumnData[] = structuredClone(colArray)
+        newColArray[colNumber].posts[postNumber] = newData
+        setColArray(newColArray)
+        setActivePostModal(null)
+
+    }
+
     return (
-        <ul className={styles.columns}>
-            {colArray.map((column, index) => (
-                <Columns key={index} title={column.title} posts={column.posts} 
-                onPostClickManager={(colNumber: number,state: boolean) => handlePostClick(colNumber, state)} colNumber={index} isGhost = {column.isGhost}
-                onColumnClick ={() => handleColClick(column.isGhost)}>
-                </Columns>
-            ))}
-        </ul>
+        <div className={boardstyles.board}>
+            {activePostModal && (
+                <PostModal postData={structuredClone(colArray[activePostModal.columnIndex].posts[activePostModal.postIndex])} 
+                onExit={handlePostModalSave} colNumber={activePostModal.columnIndex} postNumber={activePostModal.postIndex}></PostModal>
+            )}
+            <ul className={styles.columns}>
+                {colArray.map((column, index) => (
+                    <Columns key={index} title={column.title} posts={column.posts} 
+                    onPostClickManager={(colNumber: number, postNumber: number, state: boolean) => handlePostClick(colNumber, postNumber, state)} colNumber={index} isGhost = {column.isGhost}
+                    onColumnClick ={() => handleColClick(column.isGhost)}>
+                    </Columns>
+                ))}
+            </ul>
+        </div>
     )
 }
 

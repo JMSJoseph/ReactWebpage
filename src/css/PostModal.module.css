@@ -1,0 +1,64 @@
+.postModalOverlay {
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+
+.postModalMiddle {
+    position: relative;
+    margin-top: 5%;
+    width: 50%;
+    min-height: 80vh;
+    z-index: 1;
+    background-color: #fefdfb;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 30px;
+    display: flex;
+    align-items: flex-start;
+    justify-items: flex-start;
+    flex-direction: column;
+}
+
+
+.postModalMiddle textarea {
+    resize: none;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    font: inherit;
+    outline: none;
+    box-sizing: border-box;
+    padding-left: 5.5%;
+    width: 100%;
+    overflow-y: hidden;
+}
+
+.postModalMiddle h1 {
+    display: flex;
+    flex-direction: row;
+    font-size: 25px;
+    padding-left: 5%;
+}
+
+.attachment {
+    max-width: 100%;
+    min-width: 25%;
+    max-height: 20vh;
+    min-height: 0;
+    align-self: center;
+}
+
+.close {
+    align-self: flex-end;
+    padding-left: 0%;
+    padding-right: 5%;
+}

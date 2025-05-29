@@ -6,6 +6,7 @@ interface PostProps {
     attachment: string;
     isGhost: boolean;
     onPostClick: () => void;
+    postNumber: number;
 }
 
 function renderAttachment(attachment: string): JSX.Element{
@@ -27,7 +28,7 @@ function renderAttachment(attachment: string): JSX.Element{
   return <div />;
 }
 
-function Posts( {title, attachment, isGhost, onPostClick} : PostProps) {
+function Posts( {title, attachment, isGhost, onPostClick, postNumber} : PostProps) {
     if(isGhost == false) {
         return (
             <li className={styles.posts} onClick = {onPostClick}>

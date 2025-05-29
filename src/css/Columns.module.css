@@ -5,6 +5,7 @@
     text-align: left;
     align-items: flex-start;
     box-sizing: border-box;
+    z-index: 0;
 }
 
 .columnsDiv {
@@ -50,7 +51,19 @@
 }
 
 .columnsHeader {
-    padding-left: 6%;
+    padding-left: 7%;
+    resize: none;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    font: inherit;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: hidden;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 6%;
 }
 
 .columnsHeaderGhost {
