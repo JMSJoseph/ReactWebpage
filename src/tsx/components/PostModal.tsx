@@ -1,4 +1,4 @@
-import { useRef, useState, type JSX } from 'react';
+import { useEffect, useRef, useState, type JSX } from 'react';
 import styles from '../../css/PostModal.module.css'
 
 
@@ -29,11 +29,18 @@ function renderAttachment(attachment: string): JSX.Element{
 
 
 
+
 function PostModal( {postData, onExit, colNumber, postNumber} : PostModalProps) {
     const [postContent, setPostContent] = useState<PostData>(postData)
     const titleRef= useRef<HTMLTextAreaElement>(null);
     const descriptionRef= useRef<HTMLTextAreaElement>(null);
     const attachmentRef= useRef<HTMLTextAreaElement>(null);
+    useEffect(() => {
+    if (descriptionRef.current) {
+        descriptionRef.current.style.height = 'auto';
+        descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+    }
+    }, []);
     function handleTitleUpdate(newValue: string) {
         let newPostData = structuredClone(postContent)
         newPostData.title = newValue

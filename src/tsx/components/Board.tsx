@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '../../css/Columns.module.css'
 import boardstyles from '../../css/Board.module.css'
 import Columns from './Columns';
@@ -36,6 +36,69 @@ const defaultColumnArray: ColumnData[] = [
 function Board() {
     const [colArray, setColArray] = useState<ColumnData[]>(structuredClone(defaultColumnArray))
     const [activePostModal, setActivePostModal] = useState<{columnIndex: number; postIndex: number;} | null>(null);
+    const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
+
+    useEffect(() => {
+    if (needsUpdate) {
+        sendRequest();
+        setNeedsUpdate(false); 
+    }
+    }, [colArray, needsUpdate]);
+
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+    function fetchData() {
+        const url = `${import.meta.env.VITE_FLASK}/get-board`
+        const options = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(responseData => {
+                if(responseData.length > 0)
+                {
+                    setColArray(responseData)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+    }   
+
+
+    function sendRequest(){
+        const url = `${import.meta.env.VITE_FLASK}/set-board`
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(colArray)
+        }
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(responseData => {
+                console.log('Response:', responseData);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+    }
 
 
     function handlePostClick(columnNumber: number, postNumber: number, state: boolean) {
@@ -45,6 +108,7 @@ function Board() {
             changingCol.posts.splice(changingCol.posts.length-1, 1) 
             changingCol.posts = [... changingCol.posts, structuredClone(TestPost), structuredClone(GhostPost)]
             setColArray(copyColArray)
+            setNeedsUpdate(true)
         }
         else {
             setActivePostModal({columnIndex: columnNumber, postIndex: postNumber})
@@ -58,6 +122,7 @@ function Board() {
             copyColArray.splice(copyColArray.length - 1, 1)
             let changedArray: ColumnData[] = [...copyColArray, structuredClone(TestColumn), structuredClone(GhostColumn)]
             setColArray(changedArray)
+            setNeedsUpdate(true)
         }
     }
 
@@ -66,7 +131,15 @@ function Board() {
         newColArray[colNumber].posts[postNumber] = newData
         setColArray(newColArray)
         setActivePostModal(null)
+        setNeedsUpdate(true)
 
+    }
+
+    function handleColTitleSave(colNumber: number, newTitle: string){
+        let newColArray: ColumnData[] = structuredClone(colArray)
+        newColArray[colNumber].title = newTitle
+        setColArray(newColArray)
+        setNeedsUpdate(true)
     }
 
     return (
@@ -79,7 +152,7 @@ function Board() {
                 {colArray.map((column, index) => (
                     <Columns key={index} title={column.title} posts={column.posts} 
                     onPostClickManager={(colNumber: number, postNumber: number, state: boolean) => handlePostClick(colNumber, postNumber, state)} colNumber={index} isGhost = {column.isGhost}
-                    onColumnClick ={() => handleColClick(column.isGhost)}>
+                    onColumnClick ={() => handleColClick(column.isGhost)} onTitleChange={(colNumber: number, newTitle:string) => handleColTitleSave(colNumber, newTitle)}>
                     </Columns>
                 ))}
             </ul>
