@@ -20,7 +20,7 @@ function Navbar() {
             </li>
             <li>
                 <a 
-                href='https://github.com/JMSJoseph/ReactWebpage'
+                href='https://github.com/JMSJoseph'
                 target="_blank" 
                 rel="noopener noreferrer"
                 >

@@ -4,13 +4,16 @@
     background-color: #f8f7f4;
     box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    width: 100%;
+    width: 100%;    
+    margin-bottom: 30px;
 }
 
 .posts h1 {
     font-size: 25px;
     padding-left: 3%;
+    pointer-events: none;
 }
+
 
 .attachment{
     font-size: 18px;
@@ -22,4 +25,15 @@
 .ghostpostsh {
     font-size: 50px !important;
     text-align: center !important;
+}
+
+.postDelete {
+    border: none;
+    background-color: transparent;
+    font-size: 25px;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 85%;
+    margin-top: 1%;
 }

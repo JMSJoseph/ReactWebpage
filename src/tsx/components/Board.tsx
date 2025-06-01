@@ -37,7 +37,8 @@ function Board() {
     const [colArray, setColArray] = useState<ColumnData[]>(structuredClone(defaultColumnArray))
     const [activePostModal, setActivePostModal] = useState<{columnIndex: number; postIndex: number;} | null>(null);
     const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
-
+    const [postFocused, setPostFocused] = useState<{columnIndex: number; postIndex: number; } | null>(null);
+    const [colFocused, setColFocused] = useState<{columnIndex: number} | null>(null);
     useEffect(() => {
     if (needsUpdate) {
         sendRequest();
@@ -48,6 +49,116 @@ function Board() {
     useEffect(() => {
         fetchData()
     }, []);
+
+    useEffect(() => {
+        function handleKeydown(e: KeyboardEvent) {
+            let newColArray = structuredClone(colArray)
+            if(!postFocused) {
+                return;
+            }
+            if(colArray[postFocused.columnIndex].posts[postFocused.postIndex].isGhost){
+                return;
+            }
+            let postsArray = newColArray[postFocused.columnIndex].posts
+            if(e.key === 'ArrowDown') {
+                if(postFocused.postIndex < postsArray.length - 2) {
+                    postsArray.splice(postFocused.postIndex+1, 0, postsArray.splice(postFocused.postIndex, 1)[0]);
+                }
+                else
+                {
+                    postsArray.splice(0, 0, postsArray.splice(postFocused.postIndex, 1)[0]);
+                }
+            }
+            else if (e.key === 'ArrowUp') {
+                postsArray.splice(postFocused.postIndex-1, 0, postsArray.splice(postFocused.postIndex, 1)[0]);
+            }
+            else if (e.key === 'ArrowRight') {
+                let rightColumn
+                if(postFocused.columnIndex + 1 < newColArray.length - 1) {
+                    rightColumn = newColArray[postFocused.columnIndex + 1]
+                }
+                else
+                {
+                    rightColumn = newColArray[0]
+                }
+                let rightColumnIndex = rightColumn.posts.length - 1
+                if(rightColumn.posts.length > 1) {
+                    if(postFocused.postIndex < rightColumn.posts.length - 1)
+                    {
+                        rightColumnIndex = postFocused.postIndex
+                    }
+                    let temp: PostData = structuredClone(postsArray[postFocused.postIndex])
+                    postsArray.splice(postFocused.postIndex, 1)
+                    rightColumn.posts.splice(rightColumnIndex, 0, temp);
+                }
+                else
+                {
+                    let temp: PostData = structuredClone(postsArray[postFocused.postIndex])
+                    rightColumn.posts.splice(rightColumn.posts.length-1, 1) 
+                    rightColumn.posts = [... rightColumn.posts, temp, structuredClone(GhostPost)]
+                    postsArray.splice(postFocused.postIndex, 1)
+                }
+            }
+            else if (e.key === 'ArrowLeft') {
+                let leftColumn
+                if(postFocused.columnIndex - 1 >= 0) {
+                    leftColumn = newColArray[postFocused.columnIndex - 1]
+                }
+                else
+                {
+                    leftColumn= newColArray[newColArray.length-2]
+                }
+                let leftColumnIndex = leftColumn.posts.length - 1
+                if(leftColumn.posts.length > 1) {
+                    if(postFocused.postIndex < leftColumn.posts.length - 1)
+                    {
+                        leftColumnIndex = postFocused.postIndex
+                    }
+                    let temp: PostData = structuredClone(postsArray[postFocused.postIndex])
+                    postsArray.splice(postFocused.postIndex, 1)
+                    leftColumn.posts.splice(leftColumnIndex, 0, temp);
+                }
+                else
+                {
+                    let temp: PostData = structuredClone(postsArray[postFocused.postIndex])
+                    leftColumn.posts.splice(leftColumn.posts.length-1, 1) 
+                    leftColumn.posts = [... leftColumn.posts, temp, structuredClone(GhostPost)]
+                    postsArray.splice(postFocused.postIndex, 1)
+                }
+            }
+            setColArray(newColArray)
+            setNeedsUpdate(true)
+        }
+        window.addEventListener('keydown', handleKeydown)
+        return () => window.removeEventListener('keydown', handleKeydown)
+        
+    }, [postFocused, colArray]);
+
+    useEffect(() => {
+
+        function handleKeydown(e: KeyboardEvent) {
+            let newColArray = structuredClone(colArray)
+            if(!colFocused){
+                return;
+            }
+            if(e.key === "ArrowRight") {
+                if(colFocused.columnIndex < newColArray.length -2){
+                    newColArray.splice(colFocused.columnIndex+1, 0, newColArray.splice(colFocused.columnIndex, 1)[0]);
+                }
+                else{
+                    newColArray.splice(0, 0, newColArray.splice(colFocused.columnIndex, 1)[0]);
+                }
+            }
+            else if(e.key === "ArrowLeft") {
+                newColArray.splice(colFocused.columnIndex-1, 0, newColArray.splice(colFocused.columnIndex, 1)[0]); 
+            }
+            setColArray(newColArray)
+            setNeedsUpdate(true)
+        }
+        window.addEventListener('keydown', handleKeydown)
+        return () => window.removeEventListener('keydown', handleKeydown)
+        
+    }, [colFocused, colArray]);
 
     function fetchData() {
         const url = `${import.meta.env.VITE_FLASK}/get-board`
@@ -112,17 +223,23 @@ function Board() {
         }
         else {
             setActivePostModal({columnIndex: columnNumber, postIndex: postNumber})
-            console.log(columnNumber, postNumber)
         }
     }
 
-    function handleColClick(state: boolean) {
-        if(state) {
-            let copyColArray: ColumnData[] = structuredClone(colArray)
-            copyColArray.splice(copyColArray.length - 1, 1)
-            let changedArray: ColumnData[] = [...copyColArray, structuredClone(TestColumn), structuredClone(GhostColumn)]
-            setColArray(changedArray)
-            setNeedsUpdate(true)
+    function handlePostDelete(colNumber: number, postNumber: number) {
+        let newColArray: ColumnData[] = structuredClone(colArray)
+        newColArray[colNumber].posts.splice(postNumber, 1)
+        setColArray(newColArray)
+        setNeedsUpdate(true)
+    }
+
+    function handlePostFocus(colNumber: number, postNumber: number, state:boolean) {
+        if(state){
+            setPostFocused({columnIndex: colNumber, postIndex: postNumber})
+            setColFocused(null)
+        }
+        else{
+            setPostFocused(null)
         }
     }
 
@@ -135,11 +252,38 @@ function Board() {
 
     }
 
+    function handleColClick(state: boolean) {
+        if(state) {
+            let copyColArray: ColumnData[] = structuredClone(colArray)
+            copyColArray.splice(copyColArray.length - 1, 1)
+            let changedArray: ColumnData[] = [...copyColArray, structuredClone(TestColumn), structuredClone(GhostColumn)]
+            setColArray(changedArray)
+            setNeedsUpdate(true)
+        }
+    }
+
+    function handleColDelete(colNumber: number){
+        let newColArray: ColumnData[] = structuredClone(colArray)
+        newColArray.splice(colNumber, 1)
+        setColArray(newColArray)
+        setNeedsUpdate(true)
+    }
+
     function handleColTitleSave(colNumber: number, newTitle: string){
         let newColArray: ColumnData[] = structuredClone(colArray)
         newColArray[colNumber].title = newTitle
         setColArray(newColArray)
         setNeedsUpdate(true)
+    }
+
+    function handleColFocused(colNumber: number, state: boolean){
+        if(state){
+            setColFocused({columnIndex: colNumber})
+        }
+        else
+        {
+            setColFocused(null)
+        }
     }
 
     return (
@@ -152,7 +296,11 @@ function Board() {
                 {colArray.map((column, index) => (
                     <Columns key={index} title={column.title} posts={column.posts} 
                     onPostClickManager={(colNumber: number, postNumber: number, state: boolean) => handlePostClick(colNumber, postNumber, state)} colNumber={index} isGhost = {column.isGhost}
-                    onColumnClick ={() => handleColClick(column.isGhost)} onTitleChange={(colNumber: number, newTitle:string) => handleColTitleSave(colNumber, newTitle)}>
+                    onColumnClick ={() => handleColClick(column.isGhost)} onTitleChange={(colNumber: number, newTitle:string) => handleColTitleSave(colNumber, newTitle)} 
+                    onPostDeleteManager={(colNumber: number, postNumber: number) => handlePostDelete(colNumber, postNumber)} onColumnDelete={() => handleColDelete(index)}
+                    onPostFocusManager={(colNumber: number, postNumber: number) => handlePostFocus(colNumber, postNumber, true)}
+                    onPostBlurManager={(colNumber: number, postNumber: number) => handlePostFocus(colNumber, postNumber, false)} isHovered = {postFocused}
+                    onColumnFocus={() => handleColFocused(index, true)} onColumnBlur={() => handleColFocused(index, false)}>
                     </Columns>
                 ))}
             </ul>

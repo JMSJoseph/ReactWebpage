@@ -74,9 +74,9 @@ function PostModal( {postData, onExit, colNumber, postNumber} : PostModalProps) 
     }
     return (
         <>
-            <div className={styles.postModalOverlay}>
-                <div className={styles.postModalMiddle}>
-                    <h1 className={styles.close} onClick={() => onExit(postContent, colNumber, postNumber)}>X</h1>
+            <div className={styles.postModalOverlay} onClick={() => onExit(postContent, colNumber, postNumber)}>
+                <div className={styles.postModalMiddle} onClick={(e: React.MouseEvent)=> e.stopPropagation()}>
+                    <button className={styles.close} onClick={(e: React.MouseEvent) => {onExit(postContent, colNumber, postNumber)}}>X</button>
                     <div className={styles.attachment}>{postContent.attachment && renderAttachment(postContent.attachment)}</div>
                     <h1>Title</h1>
                     <textarea value={postContent.title} onChange={e => handleTitleUpdate(e.target.value)} className={styles.title} ref={titleRef}></textarea>

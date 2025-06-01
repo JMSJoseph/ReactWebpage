@@ -7,6 +7,9 @@ interface PostProps {
     isGhost: boolean;
     onPostClick: () => void;
     postNumber: number;
+    onPostDelete: () => void;
+    onPostFocus: () => void;
+    onPostBlur: () => void;
 }
 
 function renderAttachment(attachment: string): JSX.Element{
@@ -28,17 +31,18 @@ function renderAttachment(attachment: string): JSX.Element{
   return <div />;
 }
 
-function Posts( {title, attachment, isGhost, onPostClick, postNumber} : PostProps) {
-    if(isGhost == false) {
+function Posts( {title, attachment, isGhost, onPostClick, postNumber, onPostDelete, onPostFocus, onPostBlur} : PostProps) {
+    if(isGhost === false) {
         return (
-            <li className={styles.posts} onClick = {onPostClick}>
+            <li className={styles.posts} onClick = {onPostClick} onMouseEnter={() => onPostFocus()} onMouseLeave={() => onPostBlur()}>
+                <button className={styles.postDelete} onClick={(e: React.MouseEvent) => {e.stopPropagation(); onPostDelete()}}>X</button>
                 <h1>{title}</h1>
                 <div className={styles.attachment}>{attachment && renderAttachment(attachment)}</div>
             </li>
         )
     }
     return (
-        <li className={styles.posts} onClick = {onPostClick}>
+        <li className={styles.posts} onClick = {onPostClick} onMouseEnter={() => onPostFocus()} onMouseLeave={() => onPostBlur()}>
             <h1 className={styles.ghostpostsh}>+</h1>
         </li>
     )
