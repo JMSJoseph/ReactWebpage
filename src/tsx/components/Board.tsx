@@ -60,7 +60,7 @@ function Board() {
                 return;
             }
             let postsArray = newColArray[postFocused.columnIndex].posts
-            if(e.key === 'ArrowDown') {
+            if(e.code === 'KeyS') {
                 if(postFocused.postIndex < postsArray.length - 2) {
                     postsArray.splice(postFocused.postIndex+1, 0, postsArray.splice(postFocused.postIndex, 1)[0]);
                 }
@@ -69,10 +69,10 @@ function Board() {
                     postsArray.splice(0, 0, postsArray.splice(postFocused.postIndex, 1)[0]);
                 }
             }
-            else if (e.key === 'ArrowUp') {
+            else if (e.code === 'KeyW') {
                 postsArray.splice(postFocused.postIndex-1, 0, postsArray.splice(postFocused.postIndex, 1)[0]);
             }
-            else if (e.key === 'ArrowRight') {
+            else if (e.code === 'KeyD') {
                 let rightColumn
                 if(postFocused.columnIndex + 1 < newColArray.length - 1) {
                     rightColumn = newColArray[postFocused.columnIndex + 1]
@@ -99,7 +99,7 @@ function Board() {
                     postsArray.splice(postFocused.postIndex, 1)
                 }
             }
-            else if (e.key === 'ArrowLeft') {
+            else if (e.code === 'KeyA') {
                 let leftColumn
                 if(postFocused.columnIndex - 1 >= 0) {
                     leftColumn = newColArray[postFocused.columnIndex - 1]
@@ -141,7 +141,7 @@ function Board() {
             if(!colFocused){
                 return;
             }
-            if(e.key === "ArrowRight") {
+            if(e.code === "KeyD") {
                 if(colFocused.columnIndex < newColArray.length -2){
                     newColArray.splice(colFocused.columnIndex+1, 0, newColArray.splice(colFocused.columnIndex, 1)[0]);
                 }
@@ -149,7 +149,7 @@ function Board() {
                     newColArray.splice(0, 0, newColArray.splice(colFocused.columnIndex, 1)[0]);
                 }
             }
-            else if(e.key === "ArrowLeft") {
+            else if(e.code === "KeyA") {
                 newColArray.splice(colFocused.columnIndex-1, 0, newColArray.splice(colFocused.columnIndex, 1)[0]); 
             }
             setColArray(newColArray)

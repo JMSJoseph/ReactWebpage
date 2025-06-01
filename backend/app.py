@@ -54,7 +54,7 @@ def set_board():
         conn.commit()
         cursor.close()
         conn.close()
-        return "Something"
+        return jsonify({"message": "Success"}), 200
 
 
 if __name__ == '__main__':
