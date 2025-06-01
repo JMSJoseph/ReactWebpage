@@ -8,6 +8,7 @@ The second goal is to get more experience with Flask and my first experience wit
 - Develop a decent-looking front-end CSS (Done, can be improved)
 - Modal for Posts (Done, can be improved)
 - Add Posts and Columns (Done)
+- Delete Posts and Columns (Done)
 - Edit Posts and Columns (Done)
 - Implement Backend using Flask and PostgresSQL (Implemented, needs some tightening)
 - Dark mode (minor task, within a few days)
