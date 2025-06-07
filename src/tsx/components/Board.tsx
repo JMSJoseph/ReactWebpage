@@ -3,6 +3,7 @@ import styles from '../../css/Columns.module.css'
 import boardstyles from '../../css/Board.module.css'
 import Columns from './Columns';
 import PostModal from './PostModal'
+import {BoardContext, type contextInfo} from '../context/context'
 
 
 const GhostPost: PostData = { title: '+', attachment: '', description: "", isGhost: true }
@@ -138,7 +139,7 @@ function Board() {
 
         function handleKeydown(e: KeyboardEvent) {
             let newColArray = structuredClone(colArray)
-            if(!colFocused){
+            if(!colFocused || postFocused){
                 return;
             }
             if(e.code === "KeyD") {
@@ -284,6 +285,19 @@ function Board() {
         {
             setColFocused(null)
         }
+        console.log(colFocused)
+    }
+
+    const contextState: contextInfo = {
+        onPostClick: (columnNumber, postNumber: number, state: boolean) => handlePostClick(columnNumber, postNumber, state),
+        onColumnClick: () => handleColClick(true),
+        onTitleChange: (colNumber: number, newTitle:string) => handleColTitleSave(colNumber, newTitle),
+        onPostDelete: (colNumber: number, postNumber: number) => handlePostDelete(colNumber, postNumber),
+        onColumnDelete: (colNumber) => handleColDelete(colNumber),
+        onPostFocus: (colNumber: number, postNumber: number) => handlePostFocus(colNumber, postNumber, true),
+        onPostBlur: (colNumber: number, postNumber: number) => handlePostFocus(colNumber, postNumber, false),
+        onColumnFocus: (colNumber) => handleColFocused(colNumber, true),
+        onColumnBlur: (colNumber) => handleColFocused(colNumber, false)
     }
 
     return (
@@ -292,18 +306,13 @@ function Board() {
                 <PostModal postData={structuredClone(colArray[activePostModal.columnIndex].posts[activePostModal.postIndex])} 
                 onExit={handlePostModalSave} colNumber={activePostModal.columnIndex} postNumber={activePostModal.postIndex}></PostModal>
             )}
-            <ul className={styles.columns}>
-                {colArray.map((column, index) => (
-                    <Columns key={index} title={column.title} posts={column.posts} 
-                    onPostClickManager={(colNumber: number, postNumber: number, state: boolean) => handlePostClick(colNumber, postNumber, state)} colNumber={index} isGhost = {column.isGhost}
-                    onColumnClick ={() => handleColClick(column.isGhost)} onTitleChange={(colNumber: number, newTitle:string) => handleColTitleSave(colNumber, newTitle)} 
-                    onPostDeleteManager={(colNumber: number, postNumber: number) => handlePostDelete(colNumber, postNumber)} onColumnDelete={() => handleColDelete(index)}
-                    onPostFocusManager={(colNumber: number, postNumber: number) => handlePostFocus(colNumber, postNumber, true)}
-                    onPostBlurManager={(colNumber: number, postNumber: number) => handlePostFocus(colNumber, postNumber, false)} isHovered = {postFocused}
-                    onColumnFocus={() => handleColFocused(index, true)} onColumnBlur={() => handleColFocused(index, false)}>
-                    </Columns>
-                ))}
-            </ul>
+            <BoardContext.Provider value={contextState}>
+                <ul className={styles.columns}>
+                    {colArray.map((column, index) => (
+                        <Columns key={index} title={column.title} posts={column.posts} isGhost={column.isGhost} colNumber={index} isHovered={postFocused} />
+                    ))}
+                </ul>
+            </BoardContext.Provider>
         </div>
     )
 }

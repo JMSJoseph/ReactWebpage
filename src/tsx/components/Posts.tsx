@@ -1,15 +1,13 @@
-import { type JSX } from 'react'
+import { useContext, type JSX } from 'react'
 import styles from '../../css/Posts.module.css'
+import {BoardContext, type contextInfo} from '../context/context'
 
 interface PostProps {
     title: string;
     attachment: string;
     isGhost: boolean;
-    onPostClick: () => void;
+    colNumber: number;
     postNumber: number;
-    onPostDelete: () => void;
-    onPostFocus: () => void;
-    onPostBlur: () => void;
 }
 
 function renderAttachment(attachment: string): JSX.Element{
@@ -31,18 +29,19 @@ function renderAttachment(attachment: string): JSX.Element{
   return <div />;
 }
 
-function Posts( {title, attachment, isGhost, onPostClick, postNumber, onPostDelete, onPostFocus, onPostBlur} : PostProps) {
+function Posts( {title, attachment, isGhost, postNumber, colNumber} : PostProps) {
+    const context = useContext(BoardContext)
     if(isGhost === false) {
         return (
-            <li className={styles.posts} onClick = {onPostClick} onMouseEnter={() => onPostFocus()} onMouseLeave={() => onPostBlur()}>
-                <button className={styles.postDelete} onClick={(e: React.MouseEvent) => {e.stopPropagation(); onPostDelete()}}>X</button>
+            <li className={styles.posts} onClick = {() => context?.onPostClick(colNumber, postNumber, false)} onMouseEnter={() => context?.onPostFocus(colNumber, postNumber)} onMouseLeave={() => context?.onPostBlur(colNumber, postNumber)}>
+                <button className={styles.postDelete} onClick={(e: React.MouseEvent) => {e.stopPropagation(); context?.onPostDelete(colNumber, postNumber)}}>X</button>
                 <h1>{title}</h1>
                 <div className={styles.attachment}>{attachment && renderAttachment(attachment)}</div>
             </li>
         )
     }
     return (
-        <li className={styles.posts} onClick = {onPostClick} onMouseEnter={() => onPostFocus()} onMouseLeave={() => onPostBlur()}>
+        <li className={styles.posts} onClick = {() => context?.onPostClick(colNumber, postNumber, true)} onMouseEnter={() => context?.onPostFocus(colNumber, postNumber)} onMouseLeave={() => context?.onPostBlur(colNumber, postNumber)}>
             <h1 className={styles.ghostpostsh}>+</h1>
         </li>
     )

@@ -1,28 +1,19 @@
-import { useEffect, useRef, useState} from 'react';
+import { useContext, useEffect, useRef, useState} from 'react';
 import styles from '../../css/Columns.module.css'
 import Posts from './Posts';
+import {BoardContext, type contextInfo} from '../context/context'
 
 
 interface ColumnElementProps {
     title: string;
     posts: PostData[];
-    onPostClickManager: (colNumber: number, postNumber: number, state: boolean) => void;
     colNumber: number;
     isGhost: boolean;
-    onColumnClick: () => void;
-    onTitleChange: (colNumber: number, newTitle:string) => void;
-    onPostDeleteManager: (colNumber: number, postNumber: number) => void;
-    onColumnDelete: () => void;
-    onPostFocusManager: (colNumber: number, postNumber: number) => void;
-    onPostBlurManager: (colNumber: number, postNumber: number) => void;
-    onColumnFocus: () => void;
-    isHovered: {columnIndex: number; postIndex: number} | null;
-    onColumnBlur: () => void;
+    isHovered: {columnIndex: number; postIndex: number};
 }
 
 
-function Columns( {title, posts, onPostClickManager, colNumber, isGhost, onColumnClick, onTitleChange, 
-    onPostDeleteManager, onColumnDelete, onPostFocusManager, onPostBlurManager, onColumnFocus, isHovered, onColumnBlur} : ColumnElementProps) {
+function Columns( {title, posts, colNumber, isGhost, isHovered} : ColumnElementProps) {
     const titleRef= useRef<HTMLTextAreaElement>(null);
     const [titleStore, setTitleStore] = useState<string>(title)
     const [hovered, setHovered] = useState<boolean>(false)
@@ -40,19 +31,19 @@ function Columns( {title, posts, onPostClickManager, colNumber, isGhost, onColum
 
     }
 
-
+    const context = useContext(BoardContext)
 
     if(isGhost === false){
         return (
             <div className={styles.columnsDiv}>
-                <li className={`${styles.columnsLi} ${(hovered && isHovered === null) ? styles.hovered : ''}`} onClick = {onColumnClick} onMouseEnter={() => {setHovered(true); console.log(hovered, isHovered); onColumnFocus()}} onMouseLeave={() => {setHovered(false); console.log(hovered, isHovered); onColumnFocus()}} >
-                    <button className={styles.colDelete} onClick={(e: React.MouseEvent) => {e.stopPropagation(); onColumnDelete()}}>X</button>
-                    <textarea className={styles.columnsHeader} value={titleStore} onBlur={() => onTitleChange(colNumber, titleStore)} onChange={e => handleTitleUpdate(e.target.value)} ref={titleRef}></textarea>
+                <li className={`${styles.columnsLi} ${(hovered && isHovered === null) ? styles.hovered : ''}`} 
+                onMouseOver={() => {setHovered(true); console.log(hovered, isHovered); context?.onColumnFocus(colNumber)}} 
+                onMouseLeave={() => {setHovered(false); console.log(hovered, isHovered); context?.onColumnBlur(colNumber)}} >
+                    <button className={styles.colDelete} onClick={(e: React.MouseEvent) => {e.stopPropagation(); context?.onColumnDelete(colNumber)}}>X</button>
+                    <textarea className={styles.columnsHeader} value={titleStore} onBlur={() => context?.onTitleChange(colNumber, titleStore)} onChange={e => handleTitleUpdate(e.target.value)} ref={titleRef}></textarea>
                     <ul>
                         {posts.map((post, index) => (
-                            <Posts key = {index} title={post.title} attachment={post.attachment} isGhost={post.isGhost} 
-                            onPostClick={() => onPostClickManager(colNumber, index, post.isGhost)} postNumber={index} onPostDelete={() => onPostDeleteManager(colNumber, index)}
-                            onPostFocus={() => onPostFocusManager(colNumber, index)} onPostBlur={() => onPostBlurManager(colNumber, index)}></Posts>
+                            <Posts key = {index} title={post.title} attachment={post.attachment} isGhost={post.isGhost} postNumber={index} colNumber={colNumber}/>
                         ))}
                     </ul>
                 </li>
@@ -62,7 +53,7 @@ function Columns( {title, posts, onPostClickManager, colNumber, isGhost, onColum
     else {
         return (
             <div className={styles.columnsDiv}>
-                <li className={styles.columnsLi} onClick = {onColumnClick}>
+                <li className={styles.columnsLi} onClick = {() => context?.onColumnClick()}>
                     <h1 className={styles.columnsHeaderGhost}>{title}</h1>
                 </li>
             </div>
