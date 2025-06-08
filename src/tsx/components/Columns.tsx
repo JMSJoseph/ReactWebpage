@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState} from 'react';
 import styles from '../../css/Columns.module.css'
 import Posts from './Posts';
-import {BoardContext, type contextInfo} from '../context/context'
+import {BoardContext, type contextInfo, ThemeContext, type themeInfo} from '../context/context'
 
 
 interface ColumnElementProps {
@@ -17,10 +17,12 @@ function Columns( {title, posts, colNumber, isGhost, isHovered} : ColumnElementP
     const titleRef= useRef<HTMLTextAreaElement>(null);
     const [titleStore, setTitleStore] = useState<string>(title)
     const [hovered, setHovered] = useState<boolean>(false)
+    const contextTheme = useContext(ThemeContext)
 
     useEffect(() => {
         setTitleStore(title);
     }, [title]);
+
 
     function handleTitleUpdate(newValue: string) {
         setTitleStore(newValue)
@@ -36,7 +38,11 @@ function Columns( {title, posts, colNumber, isGhost, isHovered} : ColumnElementP
     if(isGhost === false){
         return (
             <div className={styles.columnsDiv}>
-                <li className={`${styles.columnsLi} ${(hovered && isHovered === null) ? styles.hovered : ''}`} 
+                <li className={`
+                ${styles.columnLi}
+                ${contextTheme?.theme === "dark" ? styles.columnsLi_dark: styles.columnsLi_light}
+                ${(hovered && isHovered == null) ? (contextTheme?.theme === "dark" ? styles.hovered_dark : styles.hovered_light) : ''}
+                `} 
                 onMouseOver={() => {setHovered(true); console.log(hovered, isHovered); context?.onColumnFocus(colNumber)}} 
                 onMouseLeave={() => {setHovered(false); console.log(hovered, isHovered); context?.onColumnBlur(colNumber)}} >
                     <button className={styles.colDelete} onClick={(e: React.MouseEvent) => {e.stopPropagation(); context?.onColumnDelete(colNumber)}}>X</button>
@@ -52,8 +58,12 @@ function Columns( {title, posts, colNumber, isGhost, isHovered} : ColumnElementP
     }
     else {
         return (
-            <div className={styles.columnsDiv}>
-                <li className={styles.columnsLi} onClick = {() => context?.onColumnClick()}>
+            <div className={`${styles.columnsDiv}`}>
+                <li className={`${styles.columnsLi}
+                ${contextTheme?.theme === "dark" ? styles.columnsLi_dark: styles.columnsLi_light}
+                ${(hovered && isHovered == null) ? (contextTheme?.theme === "dark" ? styles.hovered_dark : styles.hovered_light) : ''}`} onClick = {() => context?.onColumnClick()}
+                onMouseOver={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}>
                     <h1 className={styles.columnsHeaderGhost}>{title}</h1>
                 </li>
             </div>

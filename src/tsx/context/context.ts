@@ -13,5 +13,12 @@ export interface contextInfo {
     onColumnBlur: (colNumber: number) => void;
 }
 
+export interface themeInfo {
+    onThemeChange: () => void;
+    theme: string;
+}
+
 export const BoardContext = createContext<contextInfo | null>(null)
+
+export const ThemeContext = createContext<themeInfo | null>(null)
 

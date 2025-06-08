@@ -1,11 +1,32 @@
 .posts {
     flex-direction: column;
     list-style: none;
-    background-color: #f8f7f4;
     box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     width: 100%;    
     margin-bottom: 30px;
+}
+
+.posts_light{
+    background-color: #f8f7f4;
+}
+
+.posts_dark{
+    background-color: #353434
+}
+
+.posts_light:hover {
+    outline-color: black;
+    outline-style: solid;
+    outline-width: 2px;
+
+}
+
+.posts_dark:hover {
+    outline-color: white;
+    outline-style: solid;
+    outline-width: 2px;
+
 }
 
 .posts h1 {
@@ -36,4 +57,5 @@
     cursor: pointer;
     margin-left: 85%;
     margin-top: 1%;
+    color: inherit;
 }

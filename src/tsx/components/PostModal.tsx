@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type JSX } from 'react';
+import { useContext, useEffect, useRef, useState, type JSX } from 'react';
 import styles from '../../css/PostModal.module.css'
+import {ThemeContext, type themeInfo} from '../context/context'
 
 
 interface PostModalProps {
@@ -35,6 +36,7 @@ function PostModal( {postData, onExit, colNumber, postNumber} : PostModalProps) 
     const titleRef= useRef<HTMLTextAreaElement>(null);
     const descriptionRef= useRef<HTMLTextAreaElement>(null);
     const attachmentRef= useRef<HTMLTextAreaElement>(null);
+    const context = useContext(ThemeContext)
     useEffect(() => {
     if (descriptionRef.current) {
         descriptionRef.current.style.height = 'auto';
@@ -75,7 +77,8 @@ function PostModal( {postData, onExit, colNumber, postNumber} : PostModalProps) 
     return (
         <>
             <div className={styles.postModalOverlay} onClick={() => onExit(postContent, colNumber, postNumber)}>
-                <div className={styles.postModalMiddle} onClick={(e: React.MouseEvent)=> e.stopPropagation()}>
+                <div className={`${styles.postModalMiddle}
+                ${context?.theme === "dark" ? styles.postModalMiddle_dark : styles.postModalMiddle_light}`} onClick={(e: React.MouseEvent)=> e.stopPropagation()}>
                     <button className={styles.close} onClick={(e: React.MouseEvent) => {onExit(postContent, colNumber, postNumber)}}>X</button>
                     <div className={styles.attachment}>{postContent.attachment && renderAttachment(postContent.attachment)}</div>
                     <h1>Title</h1>

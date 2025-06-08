@@ -1,15 +1,18 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import styles from '../../css/Navbar.module.css'
+import {ThemeContext, type themeInfo} from '../context/context'
 
 function Navbar() {
+    const context = useContext(ThemeContext)
     return (
-        <ul className={styles.navbar}>
-            <li>
+        <ul className={`${styles.navbar}
+        ${context?.theme === "dark" ? styles.navbar_dark: styles.navbar_light}`}>
+            <li className={`${context?.theme === "dark" ? styles.darkHover: styles.lightHover}`}>
                 <a>
-                    Home
+                    Login
                 </a>
             </li>
-            <li>
+            <li className={`${context?.theme === "dark" ? styles.darkHover: styles.lightHover}`}>
                 <a 
                 href='https://github.com/JMSJoseph/ReactWebpage/blob/main/README.md'
                 target="_blank" 
@@ -18,7 +21,7 @@ function Navbar() {
                 About
                 </a>
             </li>
-            <li>
+            <li className={`${context?.theme === "dark" ? styles.darkHover: styles.lightHover}`}>
                 <a 
                 href='https://github.com/JMSJoseph'
                 target="_blank" 
@@ -27,7 +30,7 @@ function Navbar() {
                 Github
                 </a>
             </li>
-            <li>
+            <li className={`${context?.theme === "dark" ? styles.darkHover: styles.lightHover}`} onClick={() => {context?.onThemeChange()}}>
                 <a>
                     Theme
                 </a>

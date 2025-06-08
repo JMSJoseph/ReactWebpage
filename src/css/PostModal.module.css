@@ -18,7 +18,6 @@
     width: 50%;
     min-height: 80vh;
     z-index: 1;
-    background-color: #fefdfb;
     box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border-radius: 30px;
@@ -26,6 +25,14 @@
     align-items: flex-start;
     justify-items: flex-start;
     flex-direction: column;
+}
+
+.postModalMiddle_light {
+    background-color: #fefdfb;
+}
+
+.postModalMiddle_dark {
+    background-color: #212121;
 }
 
 
@@ -40,6 +47,7 @@
     padding-left: 5.5%;
     width: 100%;
     overflow-y: hidden;
+    color: inherit;
 }
 
 .postModalMiddle h1 {
@@ -67,4 +75,5 @@
     cursor: pointer;
     margin-right: 3%;
     margin-top: 1%;
+    color: inherit;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styles from '../../css/Columns.module.css'
 import boardstyles from '../../css/Board.module.css'
 import Columns from './Columns';
@@ -53,6 +53,12 @@ function Board() {
 
     useEffect(() => {
         function handleKeydown(e: KeyboardEvent) {
+            const target = e.target as HTMLElement;
+            const tag = target.tagName.toLowerCase();
+
+            if (tag === 'input' || tag === 'textarea' || target.isContentEditable) {
+                return; 
+            }
             let newColArray = structuredClone(colArray)
             if(!postFocused) {
                 return;
@@ -138,6 +144,12 @@ function Board() {
     useEffect(() => {
 
         function handleKeydown(e: KeyboardEvent) {
+            const target = e.target as HTMLElement;
+            const tag = target.tagName.toLowerCase();
+
+            if (tag === 'input' || tag === 'textarea' || target.isContentEditable) {
+                return; 
+            }
             let newColArray = structuredClone(colArray)
             if(!colFocused || postFocused){
                 return;

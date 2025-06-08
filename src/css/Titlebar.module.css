@@ -7,8 +7,9 @@
     height: 100%;
     box-sizing: border-box;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    background-color: rgba(85, 115, 170, 0.25)
+    background-color: rgba(85, 115, 170, 0.25);
 }
+
 
 .titlebar li {
     text-align: center;
@@ -26,6 +27,7 @@
     align-content: center;
     text-align: center;
     font: inherit;
+    color: inherit;
     outline: none;
 }
 

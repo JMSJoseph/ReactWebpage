@@ -22,11 +22,18 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    background-color: #fefdfb;
     box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border-radius: 30px;
     overflow-y: auto;
+}
+
+.columnsLi_light {
+    background-color: #fefdfb;
+}
+
+.columnsLi_dark {
+    background-color: #2b2b2b;
 }
 
 
@@ -36,14 +43,9 @@
     padding: 0;
     margin: 0 auto;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
-.columns ul li:hover {
-    outline-color: black;
-    outline-style: solid;
-    outline-width: 2px;
-
-}
 
 .columnsLi h1 {
     width: 100%;
@@ -64,6 +66,7 @@
     font-size: 30px;
     font-weight: bold;
     margin-top: 6%;
+    color: inherit;
 }
 
 .columnsHeaderGhost {
@@ -81,10 +84,19 @@
     cursor: pointer;
     margin-left: 80%;
     margin-top: 3%;
+    color: inherit;
 }
 
-.hovered {
-    border-color: black;
-    border-style: solid;
-    border-width: 2px;
+.hovered_light {
+    outline-color: black;
+    outline-style: solid;
+    outline-width:  2px;
+    outline-offset: -2px;
+}
+
+.hovered_dark {
+    outline-color: white;
+    outline-style: solid;
+    outline-width:  2px;
+    outline-offset: -2px;
 }
