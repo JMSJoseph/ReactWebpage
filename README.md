@@ -3,29 +3,10 @@
 The goal of this app is to get me used to React, including state managment, hooks, and references for Front-end development.
 The second goal is to get more experience with Flask and my first experience with PostgreSQL for a backend.
 
-## Current Features/Plans
+## Feature List and Pic Demo
 
-- Develop a decent-looking front-end CSS (Done, can be improved)
-- Modal for Posts (Done, can be improved)
-- Add Posts and Columns (Done)
-- Delete Posts and Columns (Done)
-- Edit Posts and Columns (Done)
-- Edit titles (Done)
-- Implement Backend using Flask and PostgresSQL (Done)
-- Dark mode (Done)
-- Movable Posts (Movable with WASD)
-- Moveable Columns (Done with AD)
-- Add UseContext for board, (Done)
-- Add Multi User support (Done)
-- Add password hashing (Done)
-- Add uuid system (Done)
+![image](https://github.com/user-attachments/assets/c3fdfd35-5e83-49ea-b3ef-e9e4b37de076)
 
-## Future Plans/ Polish
-- Session Token
-- Advanced Auth
-- Queue Based Updates for backend
-- Clean up side effects
-- Clean up CSS
 
 ## Tech Stack
 - React
@@ -34,12 +15,4 @@ The second goal is to get more experience with Flask and my first experience wit
 - PostgreSQL
 - Vite
 
-## Pics
 
-### Board Layout
-
-![trello1](https://github.com/user-attachments/assets/72c79682-8538-4229-ac60-83a8a81367a9)
-
-### Modal
-
-![modal](https://github.com/user-attachments/assets/0daf30c8-3864-4dff-93bf-17d75ad6e0c3)
