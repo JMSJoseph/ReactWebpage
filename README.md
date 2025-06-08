@@ -9,7 +9,7 @@ The second goal is to get more experience with Flask and my first experience wit
 
 ## Demo Video
 
-[![Demo Video](https://youtu.be/8c6WC_fdSEg)
+[![Watch Demo Video](https://github.com/user-attachments/assets/ef979fb0-12fb-4b57-a041-b1ed0c141331)](https://youtu.be/8c6WC_fdSEg)
 
 ## Tech Stack
 - React
