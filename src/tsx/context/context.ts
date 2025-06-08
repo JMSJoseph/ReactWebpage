@@ -18,7 +18,14 @@ export interface themeInfo {
     theme: string;
 }
 
+export interface uuidInfo {
+    onUuidChange: (newUuid: string) => void;
+    uuid: string | null;
+}
+
 export const BoardContext = createContext<contextInfo | null>(null)
 
 export const ThemeContext = createContext<themeInfo | null>(null)
+
+export const UuidContext = createContext<uuidInfo | null>(null)
 

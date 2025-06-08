@@ -1,19 +1,31 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import styles from '../../css/Titlebar.module.css'
-import {ThemeContext, type themeInfo} from '../context/context'
+import {UuidContext} from '../context/context'
 
 
 
 function TitleBar() {
     const titleRef= useRef<HTMLTextAreaElement>(null);
     const [titleStore, setTitleStore] = useState<string>("Untitled Board")
-    const context = useContext(ThemeContext)
+    const contextUuid = useContext(UuidContext)
+
     useEffect(() => {
-        fetchData()
-    }, []);
+        if(contextUuid && contextUuid.uuid != null)
+        {
+            setTitleStore("Untitled Board")
+            fetchData()
+        }
+    }, [contextUuid?.uuid]);
 
     function fetchData() {
-    const url = `${import.meta.env.VITE_FLASK}/get-title`
+    if(!contextUuid || !contextUuid.uuid)
+    {
+        return;
+    }
+    const params = new URLSearchParams({
+        uuid: contextUuid.uuid
+    });
+    const url = `${import.meta.env.VITE_FLASK}/get-title?${params.toString()}`
     const options = {
         method: 'GET',
         headers: {
@@ -39,8 +51,21 @@ function TitleBar() {
     }   
 
 
+    function sendRequestWrapper(){
+        if(contextUuid && contextUuid.uuid){
+            sendRequest()
+        }
+    }
+
     function sendRequest(){
-        const url = `${import.meta.env.VITE_FLASK}/set-title`
+        if(!contextUuid || !contextUuid.uuid)
+        {
+            return;
+        }
+        const params = new URLSearchParams({
+            uuid: contextUuid.uuid
+        });
+        const url = `${import.meta.env.VITE_FLASK}/set-title?${params.toString()}`
         const options = {
             method: 'POST',
             headers: {
@@ -70,7 +95,7 @@ function TitleBar() {
     return (
         <ul className={styles.titlebar}>
             <li>
-                <textarea maxLength={30} value={titleStore} onBlur={() => sendRequest()} onChange={e => handleTitleUpdate(e.target.value)} ref={titleRef}>
+                <textarea maxLength={30} value={titleStore} onBlur={() => sendRequestWrapper()} onChange={e => handleTitleUpdate(e.target.value)} ref={titleRef}>
                 </textarea>
             </li>
         </ul>

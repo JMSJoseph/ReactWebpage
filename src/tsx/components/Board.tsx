@@ -3,7 +3,7 @@ import styles from '../../css/Columns.module.css'
 import boardstyles from '../../css/Board.module.css'
 import Columns from './Columns';
 import PostModal from './PostModal'
-import {BoardContext, type contextInfo} from '../context/context'
+import {BoardContext, UuidContext, type contextInfo} from '../context/context'
 
 
 const GhostPost: PostData = { title: '+', attachment: '', description: "", isGhost: true }
@@ -40,16 +40,21 @@ function Board() {
     const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
     const [postFocused, setPostFocused] = useState<{columnIndex: number; postIndex: number; } | null>(null);
     const [colFocused, setColFocused] = useState<{columnIndex: number} | null>(null);
+    const contextUuid = useContext(UuidContext)
     useEffect(() => {
-    if (needsUpdate) {
+    if (needsUpdate && contextUuid && contextUuid.uuid != null) {
         sendRequest();
         setNeedsUpdate(false); 
     }
     }, [colArray, needsUpdate]);
 
     useEffect(() => {
-        fetchData()
-    }, []);
+        if(contextUuid && contextUuid.uuid != null)
+        {
+            setColArray(defaultColumnArray)
+            fetchData()
+        }
+    }, [contextUuid?.uuid]);
 
     useEffect(() => {
         function handleKeydown(e: KeyboardEvent) {
@@ -174,7 +179,14 @@ function Board() {
     }, [colFocused, colArray]);
 
     function fetchData() {
-        const url = `${import.meta.env.VITE_FLASK}/get-board`
+        if(!contextUuid || !contextUuid.uuid)
+        {
+            return;
+        }
+        const params = new URLSearchParams({
+            uuid: contextUuid.uuid
+        });
+        const url = `${import.meta.env.VITE_FLASK}/get-board?${params.toString()}`
         const options = {
             method: 'GET',
             headers: {
@@ -201,7 +213,14 @@ function Board() {
 
 
     function sendRequest(){
-        const url = `${import.meta.env.VITE_FLASK}/set-board`
+        if(!contextUuid || !contextUuid.uuid)
+        {
+            return;
+        }
+        const params = new URLSearchParams({
+            uuid: contextUuid.uuid
+        });
+        const url = `${import.meta.env.VITE_FLASK}/set-board?${params.toString()}`
         const options = {
             method: 'POST',
             headers: {

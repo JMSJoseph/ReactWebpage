@@ -9,7 +9,7 @@ interface ColumnElementProps {
     posts: PostData[];
     colNumber: number;
     isGhost: boolean;
-    isHovered: {columnIndex: number; postIndex: number};
+    isHovered: {columnIndex: number; postIndex: number} | null;
 }
 
 
