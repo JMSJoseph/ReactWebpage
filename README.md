@@ -11,10 +11,10 @@ The second goal is to get more experience with Flask and my first experience wit
 - Delete Posts and Columns (Done)
 - Edit Posts and Columns (Done)
 - Implement Backend using Flask and PostgresSQL (Implemented, needs some tightening)
-- Dark mode (minor task, within a few days)
+- Dark mode (Done)
 - Movable Posts (Movable with WASD)
-- Moveable Columns (Buggy but kinda works, need to track better)
-- Add UseContext for board, (not done, too much prop drilling)
+- Moveable Columns (Fixed)
+- Add UseContext for board, (Done)
 
 ## Tech Stack
 - React
