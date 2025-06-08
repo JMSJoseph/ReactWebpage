@@ -10,11 +10,22 @@ The second goal is to get more experience with Flask and my first experience wit
 - Add Posts and Columns (Done)
 - Delete Posts and Columns (Done)
 - Edit Posts and Columns (Done)
-- Implement Backend using Flask and PostgresSQL (Implemented, needs some tightening)
+- Edit titles (Done)
+- Implement Backend using Flask and PostgresSQL (Done)
 - Dark mode (Done)
 - Movable Posts (Movable with WASD)
-- Moveable Columns (Fixed)
+- Moveable Columns (Done with AD)
 - Add UseContext for board, (Done)
+- Add Multi User support (Done)
+- Add password hashing (Done)
+- Add uuid system (Done)
+
+## Future Plans/ Polish
+- Session Token
+- Advanced Auth
+- Queue Based Updates for backend
+- Clean up side effects
+- Clean up CSS
 
 ## Tech Stack
 - React
