@@ -7,6 +7,9 @@ The second goal is to get more experience with Flask and my first experience wit
 
 ![image](https://github.com/user-attachments/assets/c3fdfd35-5e83-49ea-b3ef-e9e4b37de076)
 
+## Demo Video
+
+[![Demo Video](https://youtu.be/8c6WC_fdSEg)
 
 ## Tech Stack
 - React
