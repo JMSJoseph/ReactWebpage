@@ -1,6 +1,6 @@
 .postModalOverlay {
     position: fixed;
-    z-index: 0;
+    z-index: 9999;
     top: 0;
     left: 0;
     width: 100%;
@@ -17,7 +17,6 @@
     margin-top: 5%;
     width: 50%;
     min-height: 80vh;
-    z-index: 1;
     box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border-radius: 30px;

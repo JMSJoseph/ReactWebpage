@@ -6,6 +6,11 @@ import PostModal from './PostModal'
 import {BoardContext, UuidContext, type contextInfo} from '../context/context'
 
 
+/*
+    Just basic objects for a Ghost and Empty Post/Column
+    Never got around to renaming Test to Empty on columns and Posts
+*/
+
 const GhostPost: PostData = { title: '+', attachment: '', description: "", isGhost: true }
 
 const TestPost: PostData = { title: "Untitled Post", attachment:'', description: "", isGhost: false}
@@ -35,12 +40,25 @@ const defaultColumnArray: ColumnData[] = [
 
 
 function Board() {
+   /*
+    Lots of state here, could maybe be decoupled
+    activatePostModal - spawns post modal based on currentPost
+    colFocused and postFocused are self explanatory
+    needsUpdate is for sending POST requests
+    loading keeps the user from modifying data while loading
+    colArray is the main big state object which is a 2D array of post and columns basically, (Its more like An array of two objects)
+    */
+
     const [colArray, setColArray] = useState<ColumnData[]>(structuredClone(defaultColumnArray))
     const [activePostModal, setActivePostModal] = useState<{columnIndex: number; postIndex: number;} | null>(null);
     const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
     const [postFocused, setPostFocused] = useState<{columnIndex: number; postIndex: number; } | null>(null);
     const [colFocused, setColFocused] = useState<{columnIndex: number} | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const contextUuid = useContext(UuidContext)
+    /*
+        If logged in, then send a POST request to the backend on update
+    */
     useEffect(() => {
     if (needsUpdate && contextUuid && contextUuid.uuid != null) {
         sendRequest();
@@ -48,13 +66,29 @@ function Board() {
     }
     }, [colArray, needsUpdate]);
 
+    /*
+        When Uuid is updated (login) fetch the data from the backend
+    */
     useEffect(() => {
         if(contextUuid && contextUuid.uuid != null)
         {
             setColArray(defaultColumnArray)
-            fetchData()
+            const runFetch = async () => {
+                setLoading(true)
+                console.log(loading)
+                await fetchData();
+            };
+            runFetch()
         }
     }, [contextUuid?.uuid]);
+
+    /*
+        This is for moving Posts
+        It is messy and could probably be split into functions,
+        But basically it checks that a post is focused and it is not a ghost
+        IF that is true, it allows you to move using WASD by doing splice operations on the Array
+        The weird conditionals are checks for if its at the end to wrap around and avoid the ghost post
+    */
 
     useEffect(() => {
         function handleKeydown(e: KeyboardEvent) {
@@ -146,6 +180,12 @@ function Board() {
         
     }, [postFocused, colArray]);
 
+    /*
+        Move Columns with A/D
+        Not too bad compared to posts but similar logic
+        If a post is focused then return as thats selected and a column must be focused
+    */
+
     useEffect(() => {
 
         function handleKeydown(e: KeyboardEvent) {
@@ -178,7 +218,10 @@ function Board() {
         
     }, [colFocused, colArray]);
 
-    function fetchData() {
+    /*
+        GET request for getting user board
+    */
+    async function fetchData() {
         if(!contextUuid || !contextUuid.uuid)
         {
             return;
@@ -193,7 +236,7 @@ function Board() {
                 'Content-Type': 'application/json'
             },
         }
-        fetch(url, options)
+        await fetch(url, options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -204,14 +247,18 @@ function Board() {
                 if(responseData.length > 0)
                 {
                     setColArray(responseData)
+                    setLoading(false)
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                setLoading(false)
             })
     }   
 
-
+    /*
+        POST Request for setting user board
+    */
     function sendRequest(){
         if(!contextUuid || !contextUuid.uuid)
         {
@@ -243,7 +290,9 @@ function Board() {
             })
     }
 
-
+    /*
+        Handles Post click, just spawns a new post if its a ghost post and spawns the modal if its not
+    */
     function handlePostClick(columnNumber: number, postNumber: number, state: boolean) {
         if(state) {
             let copyColArray: ColumnData[] = structuredClone(colArray)
@@ -258,6 +307,9 @@ function Board() {
         }
     }
 
+    /*
+        Delete a post from the state array
+    */
     function handlePostDelete(colNumber: number, postNumber: number) {
         let newColArray: ColumnData[] = structuredClone(colArray)
         newColArray[colNumber].posts.splice(postNumber, 1)
@@ -265,6 +317,9 @@ function Board() {
         setNeedsUpdate(true)
     }
 
+    /*
+        If a post is focused a column isnt focused, This is reused for mouseEnter and Leave with the boolean (true= enter, false = leave)
+    */
     function handlePostFocus(colNumber: number, postNumber: number, state:boolean) {
         if(state){
             setPostFocused({columnIndex: colNumber, postIndex: postNumber})
@@ -275,6 +330,9 @@ function Board() {
         }
     }
 
+    /*
+        Update data to state array from modal
+    */
     function handlePostModalSave(newData: PostData, colNumber: number, postNumber: number) {
         let newColArray: ColumnData[] = structuredClone(colArray)
         newColArray[colNumber].posts[postNumber] = newData
@@ -284,6 +342,9 @@ function Board() {
 
     }
 
+    /*
+        Columns only care if its a ghost, if so spawn another column before the ghost
+    */
     function handleColClick(state: boolean) {
         if(state) {
             let copyColArray: ColumnData[] = structuredClone(colArray)
@@ -294,6 +355,9 @@ function Board() {
         }
     }
 
+    /*
+        Delete column from state array
+    */
     function handleColDelete(colNumber: number){
         let newColArray: ColumnData[] = structuredClone(colArray)
         newColArray.splice(colNumber, 1)
@@ -301,6 +365,9 @@ function Board() {
         setNeedsUpdate(true)
     }
 
+    /*
+        Update from titleRef in Column to the state array
+    */
     function handleColTitleSave(colNumber: number, newTitle: string){
         let newColArray: ColumnData[] = structuredClone(colArray)
         newColArray[colNumber].title = newTitle
@@ -308,6 +375,9 @@ function Board() {
         setNeedsUpdate(true)
     }
 
+    /*
+        Similar to postFocused
+    */
     function handleColFocused(colNumber: number, state: boolean){
         if(state){
             setColFocused({columnIndex: colNumber})
@@ -319,6 +389,11 @@ function Board() {
         console.log(colFocused)
     }
 
+    /*
+        This is so I do not need to pass props (mostly functions) through multiple files
+        Helps clean stuff up alot
+        Context is useful
+    */
     const contextState: contextInfo = {
         onPostClick: (columnNumber, postNumber: number, state: boolean) => handlePostClick(columnNumber, postNumber, state),
         onColumnClick: () => handleColClick(true),
@@ -331,8 +406,16 @@ function Board() {
         onColumnBlur: (colNumber) => handleColFocused(colNumber, false)
     }
 
+    /*
+        Loading Div displayed when loading data that covers the screen and does not let the user do anything
+        activePostModal displays the modal for whatever post is clicked
+        columns are mapped to the state array
+    */
     return (
         <div className={boardstyles.board}>
+            {loading && (
+                <div className={boardstyles.loading}></div>
+            )}
             {activePostModal && (
                 <PostModal postData={structuredClone(colArray[activePostModal.columnIndex].posts[activePostModal.postIndex])} 
                 onExit={handlePostModalSave} colNumber={activePostModal.columnIndex} postNumber={activePostModal.postIndex}></PostModal>

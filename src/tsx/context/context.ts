@@ -1,5 +1,11 @@
-// Contexts.js
+// Contexts.ts
 import { createContext } from 'react';
+
+
+
+/*
+    interfaces for the props passed by board, and app for theme and uuid
+*/
 
 export interface contextInfo {
     onPostClick: (columnNumber:number, postNumber: number, state: boolean) => void;
@@ -23,6 +29,11 @@ export interface uuidInfo {
     uuid: string | null;
 }
 
+/*
+    Context for function prop passing frokm board
+    Context for theme for app
+    Context for uuid for app
+*/
 export const BoardContext = createContext<contextInfo | null>(null)
 
 export const ThemeContext = createContext<themeInfo | null>(null)

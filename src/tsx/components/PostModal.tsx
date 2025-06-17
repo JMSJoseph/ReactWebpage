@@ -3,6 +3,10 @@ import styles from '../../css/PostModal.module.css'
 import {ThemeContext, type themeInfo} from '../context/context'
 
 
+/*
+    Props
+*/
+
 interface PostModalProps {
     postData: PostData;
     onExit: (newData: PostData, colNumber: number, postNumber: number) => void;
@@ -10,6 +14,10 @@ interface PostModalProps {
     postNumber: number;
 }
 
+/*
+    renders attachment using regex
+    just returns an empty div if nothing matches
+*/
 function renderAttachment(attachment: string): JSX.Element{
     if (/\.(jpeg|jpg|gif|png|webp)$/i.test(attachment)) {
         return <img src={attachment} alt="Attachment" className={styles.attachment} />;
@@ -23,8 +31,6 @@ function renderAttachment(attachment: string): JSX.Element{
         );
   }
 
-  // fallback
-  console.log("fallback")
   return <div />;
 }
 
@@ -32,11 +38,47 @@ function renderAttachment(attachment: string): JSX.Element{
 
 
 function PostModal( {postData, onExit, colNumber, postNumber} : PostModalProps) {
+    /*
+        multiple refs for text areas
+        context for Theme
+        mousePos ref as it is not something that needs to rerender and the same logic as LoginModal
+    */
     const [postContent, setPostContent] = useState<PostData>(postData)
     const titleRef= useRef<HTMLTextAreaElement>(null);
     const descriptionRef= useRef<HTMLTextAreaElement>(null);
     const attachmentRef= useRef<HTMLTextAreaElement>(null);
     const context = useContext(ThemeContext)
+    const mousePos = useRef<{x: number; y:number} | null>(null)
+
+    /*
+        See LoginModal
+    */
+    function handleMouseDown(e: React.MouseEvent) {
+        if(e.button !== 0){
+            return
+        }
+        mousePos.current = {x: e.clientX, y: e.clientY}
+    }
+
+    /*
+        See LoginModal
+    */
+    function handleMouseUp(e: React.MouseEvent) {
+        if(mousePos.current == null){
+            return false
+        }
+        let testMousePos = {x: e.clientX, y: e.clientY}
+        let distance = Math.sqrt( Math.pow((testMousePos.x - mousePos.current.x), 2) + Math.pow((testMousePos.y - mousePos.current.y), 2))
+        mousePos.current = null
+        if(distance > 6.0){
+            return false
+        }
+        return true
+    }
+    /*
+        Same resizing as column
+        Could probably condense this
+    */
     useEffect(() => {
     if (descriptionRef.current) {
         descriptionRef.current.style.height = 'auto';
@@ -74,11 +116,15 @@ function PostModal( {postData, onExit, colNumber, postNumber} : PostModalProps) 
         }
 
     }
+    /*
+        See Login Modal essentially the same structure
+        title, description, attachment viewable
+    */
     return (
         <>
-            <div className={styles.postModalOverlay} onClick={() => onExit(postContent, colNumber, postNumber)}>
+            <div className={styles.postModalOverlay} onMouseDown = {(e) => handleMouseDown(e)} onMouseUp={(e) => {if(handleMouseUp(e)) {onExit(postContent, colNumber, postNumber)}}}>
                 <div className={`${styles.postModalMiddle}
-                ${context?.theme === "dark" ? styles.postModalMiddle_dark : styles.postModalMiddle_light}`} onClick={(e: React.MouseEvent)=> e.stopPropagation()}>
+                ${context?.theme === "dark" ? styles.postModalMiddle_dark : styles.postModalMiddle_light}`} onMouseDown={(e: React.MouseEvent)=> e.stopPropagation()}>
                     <button className={styles.close} onClick={(e: React.MouseEvent) => {onExit(postContent, colNumber, postNumber)}}>X</button>
                     <div className={styles.attachment}>{postContent.attachment && renderAttachment(postContent.attachment)}</div>
                     <h1>Title</h1>

@@ -7,6 +7,10 @@ import { ThemeContext, type themeInfo, UuidContext, type uuidInfo} from './conte
 
 
 function App() {
+    /* 
+        Set theme to dark or light
+        Could probably use a tenary operator here, but I hate those
+    */
     function toggleTheme(){
         let testToggle = structuredClone(curTheme)
         if(testToggle === "light"){
@@ -17,6 +21,9 @@ function App() {
             setTheme("light")
         }
     }
+    /*
+        UUID and Theme context
+    */
     const[curTheme, setTheme] = useState<string>("light")
     const[curUuid, setUuid] = useState<string | null>(null);
     const themeState: themeInfo = {
@@ -27,6 +34,9 @@ function App() {
         onUuidChange: (newUuid: string) => setUuid(newUuid),
         uuid: curUuid
     }
+    /*
+        changes text color and background color on theme change
+    */
     useEffect(() => {
     document.body.classList.remove("light", "dark");
     document.body.classList.add(curTheme);

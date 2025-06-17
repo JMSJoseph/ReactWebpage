@@ -5,12 +5,16 @@ import os
 import psycopg2
 import uuid
 import bcrypt
+#Load .env file
 load_dotenv()
 
+#Setup Flask, CORS and database URL from .env
 app = Flask(__name__)
 CORS(app)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+#Queries backend to make the colArray (board) by UUID
+#I also do some parsing here of useless json for the frontend
 @app.route('/get-board', methods = ["GET"])
 def get_board():
     uuid = request.args.get('uuid')
@@ -40,6 +44,8 @@ def get_board():
     except Exception as e:
         return jsonify({"get-board error": str(e)}), 500
 
+#Updates columns and post tables (actually deletes and sets)
+#TODO: Make this an actual update system
 @app.route('/set-board', methods = ["POST"])
 def set_board():
         rec_json =  request.get_json()
@@ -63,7 +69,7 @@ def set_board():
             print(str(e))
             return jsonify({"set-board error": str(e)}), 500 
 
-
+#Gets title from the backend by uuid
 @app.route('/get-title', methods = ["GET"])
 def get_title():
     uuid = request.args.get('uuid')
@@ -79,7 +85,9 @@ def get_title():
     except Exception as e:
         print(str(e))
         return jsonify({"get-title error": str(e)}), 500
-    
+
+#Sets title from backend by uuid
+#TODO: I might also need to make this an actual update system if I plan on users having multiple boards    
 @app.route('/set-title', methods = ["POST"])
 def set_title():
         rec_json = request.get_json()
@@ -98,7 +106,7 @@ def set_title():
         except Exception as e:
             print(str(e))
             return jsonify({"set-title error": str(e)}), 500 
-
+#Gets uuid from board by checking username and then password against bcrypt hash
 @app.route('/login-user', methods = ["GET"])
 def login_user():
     user = request.args.get('user')
@@ -118,7 +126,7 @@ def login_user():
         return jsonify({"uuid": userInfo[0][2]})
     except Exception as e:
         return jsonify({"login error": str(e)}), 500
-    
+#Registers user, assigning them a uuid and hashing their password through bcrypt 
 @app.route('/register-user', methods = ["POST"])
 def register_user():
         rec_json = request.get_json()
@@ -140,5 +148,7 @@ def register_user():
         except Exception as e:
             return jsonify({"register error": str(e)}), 500 
 
+#Debug mode
+#TODO: Not in prod do not run in debug
 if __name__ == '__main__':
     app.run(debug=True)

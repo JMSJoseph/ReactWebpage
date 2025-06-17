@@ -4,8 +4,17 @@ import {ThemeContext, type themeInfo} from '../context/context'
 import LoginModal from './LoginModal'
 
 function Navbar() {
+    /*
+        Theme context from APP
+        Login Modal state 
+    */
     const context = useContext(ThemeContext)
     const [activeLoginModal, setActiveLoginModal] = useState<boolean>(false);
+    /*
+        Theme changes on click of theme button,
+        Spawns login modal on login click
+        The other two buttons are just basic href links
+    */
     return (
         <div className={styles.navbardiv}>
             {activeLoginModal && (

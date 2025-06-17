@@ -1,10 +1,11 @@
-import { useState } from 'react'
 import styles from '../../css/MainPage.module.css'
 import Navbar from '../components/Navbar'
-import Columns from '../components/Columns'
 import TitleBar from '../components/Titlebar'
 import Board from '../components/Board'
 
+/*
+    Legit just basically htm
+*/
 function MainPage() {
     return (
         <div className={styles.mainPage}>

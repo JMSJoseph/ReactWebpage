@@ -5,10 +5,18 @@ import {UuidContext} from '../context/context'
 
 
 function TitleBar() {
+    /*
+        titleRef and store for textArea onChange
+        uuidContext for loading user's board name
+    */
     const titleRef= useRef<HTMLTextAreaElement>(null);
     const [titleStore, setTitleStore] = useState<string>("Untitled Board")
     const contextUuid = useContext(UuidContext)
 
+    /*
+        If logged in
+        Get user board name
+    */
     useEffect(() => {
         if(contextUuid && contextUuid.uuid != null)
         {
@@ -17,6 +25,9 @@ function TitleBar() {
         }
     }, [contextUuid?.uuid]);
 
+    /*
+        GET request for user board name
+    */
     function fetchData() {
     if(!contextUuid || !contextUuid.uuid)
     {
@@ -50,13 +61,18 @@ function TitleBar() {
         })
     }   
 
-
+    /*
+        Wrapper
+    */
     function sendRequestWrapper(){
         if(contextUuid && contextUuid.uuid){
             sendRequest()
         }
     }
 
+    /*
+        If loggined in, send POST change to user board title
+    */
     function sendRequest(){
         if(!contextUuid || !contextUuid.uuid)
         {
@@ -88,10 +104,15 @@ function TitleBar() {
             })
     }
 
+    /*
+        change Title store based on onChange from ref
+    */
     function handleTitleUpdate(newVal: string){
         setTitleStore(newVal)
     }
-
+    /*
+        When left typing , send request
+    */
     return (
         <ul className={styles.titlebar}>
             <li>

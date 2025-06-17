@@ -1,3 +1,7 @@
+/*
+  These are used in Board, Column and Posts
+*/
+
 interface PostData {
   title: string;
   attachment: string;
