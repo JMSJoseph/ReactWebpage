@@ -15,9 +15,6 @@ const GhostPost: PostData = { title: '+', attachment: '', description: "", isGho
 
 const TestPost: PostData = { title: "Untitled Post", attachment:'', description: "", isGhost: false}
 
-const defaultPosts: PostData[] = [
-    structuredClone(GhostPost)
-];
 
 const GhostColumn: ColumnData = {
     title: "+",
@@ -72,8 +69,8 @@ function Board() {
     useEffect(() => {
         if(contextUuid && contextUuid.uuid != null)
         {
-            setColArray(defaultColumnArray)
             const runFetch = async () => {
+                setColArray(defaultColumnArray)
                 setLoading(true)
                 console.log(loading)
                 await fetchData();

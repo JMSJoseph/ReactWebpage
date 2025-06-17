@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef, useState, type JSX } from 'react';
+import { useContext, useRef, useState} from 'react';
 import styles from '../../css/loginModal.module.css'
-import {ThemeContext, UuidContext, type themeInfo} from '../context/context'
+import {ThemeContext, UuidContext} from '../context/context'
 
 /*
     Props
@@ -157,9 +157,9 @@ function LoginModal( {onExit} : LoginModalProps) {
                 ${context?.theme === "dark" ? styles.loginModalMiddle_dark : styles.loginModalMiddle_light}`} onMouseDown={(e: React.MouseEvent)=> e.stopPropagation()}>
                     <button className={styles.close} onClick={() => onExit()}>X</button>
                     <h1>Username: </h1>
-                    <input value={loginInfo?.user} placeholder='Enter Username' onChange={e => handleUserUpdate(e.target.value)}></input>
+                    <input value={loginInfo?.user ?? ""} placeholder='Enter Username' onChange={e => handleUserUpdate(e.target.value)}></input>
                     <h1>Password: </h1>
-                    <input type='password' value={loginInfo?.password} placeholder='Enter Password'  onChange={e => handlePassUpdate(e.target.value)}></input>
+                    <input type='password' value={loginInfo?.password ?? ""} placeholder='Enter Password'  onChange={e => handlePassUpdate(e.target.value)}></input>
                     <button className={styles.formButtons} onClick={() => attemptLogin()}>Login</button>
                     <button className={styles.formButtons} onClick={() => registerUser()}>Register</button>
                 </div>

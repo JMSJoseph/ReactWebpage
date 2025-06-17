@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import styles from '../../css/Navbar.module.css'
-import {ThemeContext, type themeInfo} from '../context/context'
+import {ThemeContext} from '../context/context'
 import LoginModal from './LoginModal'
 
 function Navbar() {

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState} from 'react';
 import styles from '../../css/Columns.module.css'
 import Posts from './Posts';
-import {BoardContext, type contextInfo, ThemeContext, type themeInfo} from '../context/context'
+import {BoardContext, ThemeContext} from '../context/context'
 
 
 /*

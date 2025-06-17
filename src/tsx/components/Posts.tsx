@@ -1,6 +1,6 @@
 import { useContext, useRef, type JSX } from 'react'
 import styles from '../../css/Posts.module.css'
-import {BoardContext, type contextInfo, ThemeContext, type themeInfo} from '../context/context'
+import {BoardContext, ThemeContext} from '../context/context'
 
 /*
     Props

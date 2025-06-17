@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState, type JSX } from 'react';
 import styles from '../../css/PostModal.module.css'
-import {ThemeContext, type themeInfo} from '../context/context'
+import {ThemeContext} from '../context/context'
 
 
 /*
@@ -125,7 +125,7 @@ function PostModal( {postData, onExit, colNumber, postNumber} : PostModalProps) 
             <div className={styles.postModalOverlay} onMouseDown = {(e) => handleMouseDown(e)} onMouseUp={(e) => {if(handleMouseUp(e)) {onExit(postContent, colNumber, postNumber)}}}>
                 <div className={`${styles.postModalMiddle}
                 ${context?.theme === "dark" ? styles.postModalMiddle_dark : styles.postModalMiddle_light}`} onMouseDown={(e: React.MouseEvent)=> e.stopPropagation()}>
-                    <button className={styles.close} onClick={(e: React.MouseEvent) => {onExit(postContent, colNumber, postNumber)}}>X</button>
+                    <button className={styles.close} onClick={() => {onExit(postContent, colNumber, postNumber)}}>X</button>
                     <div className={styles.attachment}>{postContent.attachment && renderAttachment(postContent.attachment)}</div>
                     <h1>Title</h1>
                     <textarea value={postContent.title} onChange={e => handleTitleUpdate(e.target.value)} className={styles.title} ref={titleRef}></textarea>
