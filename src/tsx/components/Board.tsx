@@ -70,9 +70,7 @@ function Board() {
         if(contextUuid && contextUuid.uuid != null)
         {
             const runFetch = async () => {
-                setColArray(defaultColumnArray)
                 setLoading(true)
-                console.log(loading)
                 await fetchData();
             };
             runFetch()
